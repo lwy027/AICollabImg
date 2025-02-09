@@ -3,14 +3,14 @@ import { message } from 'ant-design-vue'
 import { BASE_URL } from '../config'
 
 // 创建 Axios 实例
-const wyRequest = axios.create({
+const request = axios.create({
   baseURL: BASE_URL,
   timeout: 60000,
   withCredentials: true,
 })
 
 // 全局请求拦截器
-wyRequest.interceptors.request.use(
+request.interceptors.request.use(
   function (config) {
     // Do something before request is sent
     return config
@@ -22,7 +22,7 @@ wyRequest.interceptors.request.use(
 )
 
 // 全局响应拦截器
-wyRequest.interceptors.response.use(
+request.interceptors.response.use(
   function (response) {
     const { data } = response
     // 未登录
@@ -45,4 +45,4 @@ wyRequest.interceptors.response.use(
   },
 )
 
-export default wyRequest
+export default request

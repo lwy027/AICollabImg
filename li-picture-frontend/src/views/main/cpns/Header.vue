@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
-import GlobalHeader from '@/components/GlobalHeader.vue'
+import GlobalHeader from '@/components/main/GlobalHeader.vue'
 </script>
 
 <template>
