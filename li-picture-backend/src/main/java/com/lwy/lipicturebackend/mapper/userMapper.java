@@ -1,4 +1,4 @@
-package com.lwy.lipicturebackend.generator.mapper;
+package com.lwy.lipicturebackend.mapper;
 
 import generator.domain.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;

@@ -1,4 +1,4 @@
-package com.lwy.lipicturebackend.model.dto;
+package com.lwy.lipicturebackend.model.dto.user;
 
 import lombok.Data;
 
