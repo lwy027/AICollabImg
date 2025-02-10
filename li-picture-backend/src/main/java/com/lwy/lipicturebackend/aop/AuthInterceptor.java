@@ -4,6 +4,7 @@ package com.lwy.lipicturebackend.aop;
 import com.lwy.lipicturebackend.annotation.AuthCheck;
 import com.lwy.lipicturebackend.exception.BusinessException;
 import com.lwy.lipicturebackend.exception.ErrorCode;
+import com.lwy.lipicturebackend.model.entity.User;
 import com.lwy.lipicturebackend.model.enums.UserRoleEnum;
 import com.lwy.lipicturebackend.service.UserService;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -39,7 +40,7 @@ public class AuthInterceptor {
         RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
         HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
         // 当前登录
-        generator.domain.User loginUser = userService.getLoginUser(request);
+        User loginUser = userService.getLoginUser(request);
         UserRoleEnum mustRoleEnum = UserRoleEnum.getEnumByValue(mustRole);
         // 不需要权限，放行
         if (mustRoleEnum == null) {

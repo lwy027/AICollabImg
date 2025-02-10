@@ -1,4 +1,4 @@
-package generator.domain;
+package com.lwy.lipicturebackend.model.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 
@@ -100,4 +100,6 @@ public class User implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
+
+
 }

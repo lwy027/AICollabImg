@@ -10,10 +10,11 @@ import com.lwy.lipicturebackend.exception.BusinessException;
 import com.lwy.lipicturebackend.exception.ErrorCode;
 import com.lwy.lipicturebackend.exception.ThrowUtils;
 import com.lwy.lipicturebackend.model.dto.user.*;
+import com.lwy.lipicturebackend.model.entity.User;
 import com.lwy.lipicturebackend.model.vo.LoginUserVO;
 import com.lwy.lipicturebackend.model.vo.UserVo;
 import com.lwy.lipicturebackend.service.UserService;
-import generator.domain.User;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,7 +53,7 @@ public class UserController {
 
     @GetMapping("/get/login")
     public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
-        generator.domain.User loginUser = userService.getLoginUser(request);
+        User loginUser = userService.getLoginUser(request);
         return ResultUtils.success(userService.getLoginUserVO(loginUser));
     }
 
@@ -63,7 +64,7 @@ public class UserController {
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Long> addUser(@RequestBody UserAddRequest userAddRequest) {
         ThrowUtils.throwIf(userAddRequest == null, ErrorCode.PARAMS_ERROR);
-        generator.domain.User user = new User();
+        User user = new User();
         BeanUtils.copyProperties(userAddRequest, user);
         // 默认密码 12345678
         final String DEFAULT_PASSWORD = "123456789";
@@ -81,7 +82,7 @@ public class UserController {
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<User> getUserById(long id) {
         ThrowUtils.throwIf(id <= 0, ErrorCode.PARAMS_ERROR);
-        generator.domain.User user = userService.getById(id);
+        User user = userService.getById(id);
         ThrowUtils.throwIf(user == null, ErrorCode.NOT_FOUND_ERROR);
         return ResultUtils.success(user);
     }
@@ -136,7 +137,7 @@ public class UserController {
         ThrowUtils.throwIf(userQueryRequest == null, ErrorCode.PARAMS_ERROR);
         long current = userQueryRequest.getCurrent();
         long pageSize = userQueryRequest.getPageSize();
-        Page<generator.domain.User> userPage = userService.page(new Page<>(current, pageSize), userService.getQueryWrapper(userQueryRequest));
+        Page<User> userPage = userService.page(new Page<>(current, pageSize), userService.getQueryWrapper(userQueryRequest));
         Page<UserVo> userVoPage = new Page<>(current, pageSize, userPage.getTotal());
         List<UserVo> userVoList = userService.getUserVoList(userPage.getRecords());
         userVoPage.setRecords(userVoList);

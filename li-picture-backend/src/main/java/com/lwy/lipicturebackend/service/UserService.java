@@ -2,9 +2,9 @@ package com.lwy.lipicturebackend.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lwy.lipicturebackend.model.dto.user.UserQueryRequest;
+import com.lwy.lipicturebackend.model.entity.User;
 import com.lwy.lipicturebackend.model.vo.LoginUserVO;
 import com.lwy.lipicturebackend.model.vo.UserVo;
-import generator.domain.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -61,5 +61,15 @@ public interface UserService extends IService<User> {
 
     List<UserVo> getUserVoList(List<User> userList);
 
+
     QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest);
+
+    /**
+     * 是否为管理员
+     *
+     * @param user
+     * @return
+     */
+    boolean isAdmin(User user);
+
 }

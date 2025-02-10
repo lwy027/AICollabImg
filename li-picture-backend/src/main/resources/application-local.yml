@@ -11,6 +11,7 @@ spring:
     url: jdbc:mysql://localhost:3306/li_picture
     username: root
     password: Liweiye123456
+  # 使用更多的文件上传体积
   servlet:
     multipart:
       max-file-size: 10MB
@@ -36,3 +37,11 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - com.lwy.lipicturebackend.controller
+# 对象存储配置（需要从腾讯云获取）
+cos:
+  client:
+    host: https://lwy-1310725192.cos.ap-nanjing.myqcloud.com
+    secretId: AKIDpT3ZwKrLk0BIE0azCBxUpxrY1HK9sQlu
+    secretKey: 1ta3JLAAFYhkttkOrMhs45sVwCF83pQt
+    region: ap-nanjing
+    bucket: lwy-1310725192

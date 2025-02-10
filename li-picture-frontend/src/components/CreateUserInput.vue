@@ -90,6 +90,7 @@ const onSubmit = () => {
         if (props?.fetchData) {
           props?.fetchData()
         }
+        emits('cancel', false)
         message.success('创建成功')
         resetFields()
       } else {

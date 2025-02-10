@@ -10,10 +10,11 @@ import com.lwy.lipicturebackend.constant.UserConstant;
 import com.lwy.lipicturebackend.exception.BusinessException;
 import com.lwy.lipicturebackend.exception.ErrorCode;
 import com.lwy.lipicturebackend.model.dto.user.UserQueryRequest;
+import com.lwy.lipicturebackend.model.entity.User;
 import com.lwy.lipicturebackend.model.enums.UserRoleEnum;
 import com.lwy.lipicturebackend.model.vo.LoginUserVO;
 import com.lwy.lipicturebackend.model.vo.UserVo;
-import generator.domain.User;
+
 import com.lwy.lipicturebackend.service.UserService;
 import com.lwy.lipicturebackend.mapper.userMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,10 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class userServiceImpl extends ServiceImpl<userMapper, User> implements UserService {
+    @Override
+    public boolean isAdmin(User user) {
+        return user != null && UserRoleEnum.ADMIN.getValue().equals(user.getUserRole());
+    }
 
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword) {
