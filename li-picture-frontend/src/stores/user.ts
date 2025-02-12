@@ -14,7 +14,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 const useUser = defineStore('user', () => {
-  const userInfo = ref({})
+  const userInfo = ref({}) ?? localCache.getCache(LOGIN_TOKEN)
   //1.用户登录请求
   async function userLogin(values: never) {
     const res = await userLoginUsingPost(values)
@@ -59,7 +59,6 @@ const useUser = defineStore('user', () => {
   async function addUser(userAddRequest: API.UserAddRequest) {
     console.log(userAddRequest)
     const res = await addUserUsingPost(userAddRequest)
-
     return res
   }
 
@@ -71,7 +70,6 @@ const useUser = defineStore('user', () => {
     addUser,
     deleteUser,
     listUserVoByPage,
-
     userInfo,
   }
 })

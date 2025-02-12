@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 /* eslint-disable */
 import request from '@/service/requests'
@@ -103,7 +102,6 @@ export async function userRegisterUsingPost(
   body: API.UserRegisterRequest,
   options?: { [key: string]: any },
 ) {
-  console.log(body)
   return request<API.BaseResponseLong_>('/api/user/register', {
     method: 'POST',
     headers: {

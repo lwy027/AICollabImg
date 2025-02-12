@@ -6,7 +6,7 @@ import { computed, onMounted, reactive, ref } from 'vue'
 import dayjs from 'dayjs'
 import { localCache } from '@/utils/catch'
 import { LOGIN_TOKEN, userRole } from '@/global/constant'
-import CreateUserInput from './CreateUserInput.vue'
+import CreateUserInput from '../CreateUserInput.vue'
 const columns = [
   {
     title: 'id',
@@ -89,6 +89,7 @@ const pagination = computed(() => {
 })
 
 // 表格变化处理
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const doTableChange = (page: any) => {
   searchParams.current = page.current
   searchParams.pageSize = page.pageSize
