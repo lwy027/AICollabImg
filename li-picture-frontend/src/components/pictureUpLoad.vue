@@ -37,7 +37,7 @@ const handleUpload = async ({ file }: any) => {
   try {
     const params = props.picture ? { id: props.picture.id } : {}
     const res = await uploadPictureUsingPost(params, {}, file)
-
+    console.log(res)
     if (res.code === 0 && res.data) {
       message.success('图片上传成功')
       // 将上传成功的图片信息传递给父组件
