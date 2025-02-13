@@ -59,7 +59,7 @@ const fetchData = async () => {
   const res = await listPictureVoByPageUsingPost(params)
   if (res.data) {
     dataList.value = res.data.records ?? []
-    total.value = res.data.total ?? 0
+    total.value = res.total ?? 0
   } else {
     message.error('获取数据失败，' + res.message)
   }

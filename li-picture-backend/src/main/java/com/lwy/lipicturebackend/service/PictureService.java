@@ -3,6 +3,8 @@ package com.lwy.lipicturebackend.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lwy.lipicturebackend.model.dto.picture.PictureQueryRequest;
+import com.lwy.lipicturebackend.model.dto.picture.PictureReviewRequest;
+import com.lwy.lipicturebackend.model.dto.picture.PictureUploadByBatchRequest;
 import com.lwy.lipicturebackend.model.dto.picture.PictureUploadRequest;
 import com.lwy.lipicturebackend.model.entity.Picture;
 import com.lwy.lipicturebackend.model.entity.User;
@@ -28,12 +30,12 @@ public interface PictureService extends IService<Picture> {
     /**
      * 上传图片
      *
-     * @param multipartFile
+     * @param inputSource
      * @param pictureUploadRequest
      * @param loginUser
      * @return
      */
-    PictureVO uploadPicture(MultipartFile multipartFile, PictureUploadRequest pictureUploadRequest, User loginUser);
+    PictureVO uploadPicture(Object inputSource, PictureUploadRequest pictureUploadRequest, User loginUser);
 
     /**
      * 获取图片包装类（单条）
@@ -63,5 +65,16 @@ public interface PictureService extends IService<Picture> {
 
     QueryWrapper<Picture> getQueryWrapper(PictureQueryRequest pictureQueryRequest);
 
-//    QueryWrapper<Picture> getQueryWrapper(PictureQueryRequest pictureQueryRequest);
+    /**
+     * 图片审核
+     *
+     * @param pictureReviewRequest
+     * @param loginUser
+     */
+    void doPictureReview(PictureReviewRequest pictureReviewRequest, User loginUser);
+
+
+    void fillReviewParams(Picture picture, User loginUser);
+
+    Integer uploadPictureByBatch(PictureUploadByBatchRequest pictureUploadByBatchRequest, User loginUser);
 }

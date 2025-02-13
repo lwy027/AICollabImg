@@ -85,7 +85,7 @@ const onSubmit = () => {
   validate()
     .then(async () => {
       const res = await useStore.addUser(createUser)
-
+      console.log(res)
       if (res?.code === 0) {
         if (props?.fetchData) {
           props?.fetchData()
@@ -94,7 +94,7 @@ const onSubmit = () => {
         message.success('创建成功')
         resetFields()
       } else {
-        message.error('创建失败，' + res.data.message)
+        message.error('创建失败，' + res.message)
       }
     })
     .catch((err) => {

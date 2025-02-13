@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/components/Home.vue'
 import { userRole } from '@/global/constant'
 import addPicture from '@/views/picture/addPicture.vue'
+import addPictureBatchVue from '@/views/picture/addPictureBatch.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -51,6 +52,11 @@ const router = createRouter({
       path: '/user/register',
       name: 'register',
       component: () => import('../views/user/UserRegister.vue'),
+    },
+    {
+      path: '/add_picture/batch',
+      name: '批量创建图片',
+      component: addPictureBatchVue,
     },
   ],
 })

@@ -49,8 +49,9 @@ const canEdit = computed(() => {
 
 // 编辑
 const doEdit = () => {
-  router.push('/add_picture?id=' + picture.value.id)
+  router.push('/admin/add_picture?id=' + picture.value.id)
 }
+
 // 删除
 const doDelete = async () => {
   visible.value = true
@@ -92,7 +93,7 @@ const doDeleteOk = async () => {
             <a-descriptions-item label="作者">
               <a-space>
                 <a-avatar :size="24" :src="picture.user?.userAvatar" />
-                <div>{{ picture.user?.userName }}</div>
+                <div>{{ picture?.user?.userName }}</div>
               </a-space>
             </a-descriptions-item>
             <a-descriptions-item label="名称">

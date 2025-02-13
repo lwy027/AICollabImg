@@ -1,21 +1,24 @@
 <script setup lang="ts">
 import { getPictureByIdUsingGet } from '@/api/pictureController'
 import { editPictureUsingPost, listPictureTagCategoryUsingGet } from '@/api/pictureController'
-import UpLoad from '@/components/upLoad.vue'
+import PictureUpLoad from '@/components/pictureUpLoad.vue'
+import UrlPictureUpLoad from '@/components/UrlPictureUpLoad.vue'
 import { message } from 'ant-design-vue'
 import { onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const picture = ref<API.PictureVO>()
-const onSuccess = (newPicture: API.PictureVO) => {
-  picture.value = newPicture
-  pictureForm.name = newPicture.name
-}
 
 const pictureForm = reactive<API.PictureEditRequest>({})
 
 const router = useRouter()
 const route = useRoute()
+
+const onSuccess = (newPicture: API.PictureVO) => {
+  console.log(newPicture)
+  picture.value = newPicture
+  pictureForm.name = newPicture.name
+}
 
 /**
  * 提交表单
@@ -37,13 +40,14 @@ const handleSubmit = async (values: any) => {
       path: `/picture/${pictureId}`,
     })
   } else {
-    message.error('创建失败，' + res.data.message)
+    message.error('创建失败，' + res.message)
   }
 }
 
 //获取分类和标签选项
 const tagOptions = ref<{ value: string; label: string }[]>([])
 const categoryOptions = ref<{ value: string; label: string }[]>([])
+const uploadType = ref<'file' | 'url'>('file')
 
 // 获取标签和分类选项
 const getTagCategoryOptions = async () => {
@@ -77,7 +81,7 @@ onMounted(() => {
 const getOldPicture = async () => {
   // 获取数据
   const id = route.query?.id
-  console.log(id)
+
   if (id) {
     const res = await getPictureByIdUsingGet({
       id: id,
@@ -103,8 +107,17 @@ onMounted(() => {
     <h2 style="margin-bottom: 16px">
       {{ route.query?.id ? '修改图片' : '创建图片' }}
     </h2>
+    <!-- 选择上传方式 -->
+    <a-tabs v-model:activeKey="uploadType"
+      >>
+      <a-tab-pane key="file" tab="文件上传">
+        <PictureUpLoad :picture="picture" :onSuccess="onSuccess" />
+      </a-tab-pane>
+      <a-tab-pane key="url" tab="URL 上传" force-render>
+        <UrlPictureUpLoad :picture="picture" :onSuccess="onSuccess" />
+      </a-tab-pane>
+    </a-tabs>
 
-    <UpLoad :picture="picture" :onSuccess="onSuccess" />
     <a-form layout="vertical" v-if="picture" :model="pictureForm" @finish="handleSubmit">
       <a-form-item label="名称" name="name">
         <a-input v-model:value="pictureForm.name" placeholder="请输入名称" />
