@@ -10,6 +10,7 @@ import com.lwy.lipicturebackend.model.entity.Picture;
 import com.lwy.lipicturebackend.model.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lwy.lipicturebackend.model.vo.PictureVO;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -77,4 +78,7 @@ public interface PictureService extends IService<Picture> {
     void fillReviewParams(Picture picture, User loginUser);
 
     Integer uploadPictureByBatch(PictureUploadByBatchRequest pictureUploadByBatchRequest, User loginUser);
+
+    @Async
+    void clearPictureFile(Picture oldPicture);
 }

@@ -43,5 +43,9 @@ public class UploadPictureResult {
      * 图片格式
      */
     private String picFormat;
+    /**
+     * 缩略图
+     */
+    private String thumbnailUrl;
 
 }

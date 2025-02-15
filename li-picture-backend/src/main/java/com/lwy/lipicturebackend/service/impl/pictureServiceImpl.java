@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lwy.lipicturebackend.exception.BusinessException;
 import com.lwy.lipicturebackend.exception.ErrorCode;
 import com.lwy.lipicturebackend.exception.ThrowUtils;
+import com.lwy.lipicturebackend.manager.CosManager;
 import com.lwy.lipicturebackend.manager.upload.FilePictureUpload;
 import com.lwy.lipicturebackend.manager.upload.PictureUploadTemplate;
 import com.lwy.lipicturebackend.manager.upload.UrlPictureUpload;
@@ -27,9 +28,9 @@ import com.lwy.lipicturebackend.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.springframework.beans.BeanUtils;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import com.lwy.lipicturebackend.mapper.pictureMapper;
-import org.springframework.web.multipart.MultipartFile;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -54,6 +55,8 @@ import java.util.stream.Collectors;
 public class pictureServiceImpl extends ServiceImpl<pictureMapper, Picture> implements PictureService {
     @Resource
     private UserService userService;
+    @Resource
+    private CosManager cosManager;
     @Resource
     private FilePictureUpload filePictureUpload;
     @Resource
@@ -116,6 +119,7 @@ public class pictureServiceImpl extends ServiceImpl<pictureMapper, Picture> impl
         System.out.println(uploadPictureResult);
         Picture picture = new Picture();
         picture.setUrl(uploadPictureResult.getUrl());
+        picture.setThumbnailUrl(uploadPictureResult.getThumbnailUrl());
         // 支持外层传递图片名称
         String picName = uploadPictureResult.getPicName();
         if (pictureUploadRequest != null && StrUtil.isNotBlank(pictureUploadRequest.getPicName())) {
@@ -127,6 +131,7 @@ public class pictureServiceImpl extends ServiceImpl<pictureMapper, Picture> impl
         picture.setPicHeight(uploadPictureResult.getPicHeight());
         picture.setPicScale(uploadPictureResult.getPicScale());
         picture.setPicFormat(uploadPictureResult.getPicFormat());
+
         picture.setUserId(loginUser.getId());
         // 补充审核参数
         this.fillReviewParams(picture, loginUser);
@@ -348,6 +353,28 @@ public class pictureServiceImpl extends ServiceImpl<pictureMapper, Picture> impl
         }
         return uploadCount;
     }
+
+
+    @Async
+    @Override
+    public void clearPictureFile(Picture oldPicture) {
+        // 判断该图片是否被多条记录使用
+        String pictureUrl = oldPicture.getUrl();
+        long count = this.lambdaQuery().eq(Picture::getUrl, pictureUrl).count();
+        // 有不止一条记录用到了该图片，不清理
+        if (count > 1) {
+            return;
+        }
+        // FIXME 注意，这里的 url 包含了域名，实际上只要传 key 值（存储路径）就够了
+        cosManager.deleteObject(oldPicture.getUrl());
+        // 清理缩略图
+        String thumbnailUrl = oldPicture.getThumbnailUrl();
+        if (StrUtil.isNotBlank(thumbnailUrl)) {
+            cosManager.deleteObject(thumbnailUrl);
+        }
+    }
+
+
 }
 
 
