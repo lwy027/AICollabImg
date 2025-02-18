@@ -64,7 +64,10 @@ public class Picture implements Serializable {
      * 图片宽高比例
      */
     private Double picScale;
-
+    /**
+     * 空间 id
+     */
+    private Long spaceId;
     /**
      * 图片格式
      */
