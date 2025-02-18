@@ -7,7 +7,6 @@ import downloadImage from '@/utils/downloadImage.ts'
 import { localCache } from '@/utils/catch.ts'
 import { LOGIN_TOKEN } from '@/global/constant.ts'
 import router from '@/router'
-import { backTopProps } from 'ant-design-vue/es/float-button/interface'
 const props = defineProps<{
   id: string | number
 }>()
@@ -49,7 +48,13 @@ const canEdit = computed(() => {
 
 // 编辑
 const doEdit = () => {
-  router.push('/admin/add_picture?id=' + picture.value.id)
+  router.push({
+    path: '/add_picture',
+    query: {
+      id: picture.value.id,
+      spaceId: picture.value.spaceId,
+    },
+  })
 }
 
 // 删除
@@ -67,6 +72,7 @@ const doDeleteOk = async () => {
     return
   }
   const res = await deletePictureUsingPost({ id })
+
   if (res.code === 0) {
     visible.value = false
     message.success('删除成功')

@@ -45,18 +45,38 @@ const router = createRouter({
     },
     {
       path: '/user/login',
-      name: 'login',
+      name: '登录',
       component: () => import('../views/user/UserLogin.vue'),
     },
     {
       path: '/user/register',
-      name: 'register',
+      name: '注册',
       component: () => import('../views/user/UserRegister.vue'),
     },
     {
       path: '/add_picture/batch',
       name: '批量创建图片',
-      component: addPictureBatchVue,
+      component: () => import('@/views/picture/addPictureBatch.vue'),
+    },
+    {
+      path: '/admin/spaceManage',
+      name: '空间管理',
+      component: () => import('@/components/space/SpaceManager.vue'),
+    },
+    {
+      path: '/add_space',
+      name: '创建空间',
+      component: () => import('@/components/picture/AddSpace.vue'),
+    },
+    {
+      path: '/my_space',
+      name: '我的空间',
+      component: () => import('@/views/user/MySpace.vue'),
+    },
+    {
+      path: '/space/:id',
+      name: '私人空间',
+      component: () => import('@/components/space/SpaceDetail.vue'),
     },
   ],
 })

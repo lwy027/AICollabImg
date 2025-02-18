@@ -1,6 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
-import request from '@/service/requests'
+import request from '@/request'
 
 /** health GET /api/health */
 export async function healthUsingGet(options?: { [key: string]: any }) {

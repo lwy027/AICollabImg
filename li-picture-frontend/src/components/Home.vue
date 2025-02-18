@@ -7,6 +7,7 @@ import {
 import { message } from 'ant-design-vue'
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import PictureList from './picture/PictureList.vue'
 
 // 数据
 const dataList = ref([])
@@ -91,12 +92,12 @@ const getTagCategoryOptions = async () => {
 onMounted(() => {
   getTagCategoryOptions()
 })
-const router = useRouter()
-// 跳转至图片详情
-const doClickPicture = (picture) => {
-  router.push({
-    path: `/picture/${picture.id}`,
-  })
+
+const onPageChange = (value) => {
+  console.log(value)
+  // searchParams.current = page
+  // searchParams.pageSize = pageSize
+  // fetchData()
 }
 </script>
 
@@ -132,40 +133,14 @@ const doClickPicture = (picture) => {
     </div>
 
     <!-- 图片列表 -->
-    <a-list
-      :grid="{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 4, xl: 5, xxl: 6 }"
-      :data-source="dataList"
-      :pagination="pagination"
-      :loading="loading"
-    >
-      <template #renderItem="{ item: picture }">
-        <a-list-item style="padding: 0">
-          <!-- 单张图片 -->
-          <a-card hoverable @click="doClickPicture(picture)">
-            <template #cover>
-              <img
-                style="height: 180px; object-fit: cover"
-                :alt="picture.name"
-                :src="picture.thumbnailUrl ?? picture.url"
-                loading="lazy"
-              />
-            </template>
-            <a-card-meta :title="picture.name">
-              <template #description>
-                <a-flex>
-                  <a-tag color="green">
-                    {{ picture.category ?? '默认' }}
-                  </a-tag>
-                  <a-tag v-for="tag in picture.tags" :key="tag">
-                    {{ tag }}
-                  </a-tag>
-                </a-flex>
-              </template>
-            </a-card-meta>
-          </a-card>
-        </a-list-item>
-      </template>
-    </a-list>
+    <PictureList :dataList="dataList" :loading="loading" />
+    <a-pagination
+      style="text-align: right"
+      v-model:current="searchParams.current"
+      v-model:pageSize="searchParams.pageSize"
+      :total="total"
+      @change="onPageChange"
+    />
   </div>
 </template>
 

@@ -14,5 +14,6 @@ import GlobalHeader from '@/components/main/GlobalHeader.vue'
   margin-bottom: 16px;
   color: unset;
   background: white;
+  position: fixed;
 }
 </style>

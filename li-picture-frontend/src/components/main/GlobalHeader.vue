@@ -31,6 +31,11 @@ const originItems = ref<MenuProps['items']>([
     label: '图片管理',
     title: '图片管理',
   },
+  {
+    key: '/admin/spaceManage',
+    label: '空间管理',
+    title: '空间管理',
+  },
 ])
 
 const filterMenus = (menus = [] as MenuProps['items']) => {
@@ -125,6 +130,7 @@ const doLogout = () => {
   .title-bar {
     display: flex;
     align-items: center;
+
     .logo {
       height: 48px;
       background-color: white;

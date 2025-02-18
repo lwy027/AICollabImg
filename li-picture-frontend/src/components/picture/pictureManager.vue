@@ -91,6 +91,7 @@ const pagination = computed(() => {
 const fetchData = async () => {
   const res = await listPictureByPageUsingPost({
     ...searchParams,
+    nullSpaceId: true,
   })
 
   if (res.data) {
@@ -274,18 +275,4 @@ const doDeletePictrureOk = async () => {
   </div>
 </template>
 
-<style lang="less" scoped>
-.user-manager {
-  display: flex;
-}
-.create-user-input {
-  width: 500px;
-  position: absolute;
-  top: 25%;
-  left: 40%;
-  background-color: #fff;
-}
-.createPicture {
-  margin-left: 100px;
-}
-</style>
+<style lang="less" scoped></style>
