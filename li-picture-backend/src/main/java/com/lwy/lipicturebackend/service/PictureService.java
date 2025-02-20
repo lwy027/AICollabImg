@@ -8,9 +8,11 @@ import com.lwy.lipicturebackend.model.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lwy.lipicturebackend.model.vo.PictureVO;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author 27595
@@ -87,6 +89,8 @@ public interface PictureService extends IService<Picture> {
      */
     void deletePicture(long pictureId, User loginUser);
 
+    List<PictureVO> searchPictureByColor(Long spaceId, String picColor, User loginUser);
+
     /**
      * 编辑图片
      *
@@ -102,4 +106,7 @@ public interface PictureService extends IService<Picture> {
      * @param picture
      */
     void checkPictureAuth(User loginUser, Picture picture);
+
+    @Transactional(rollbackFor = Exception.class)
+    void editPictureByBatch(PictureEditByBatchRequest pictureEditByBatchRequest, User loginUser);
 }

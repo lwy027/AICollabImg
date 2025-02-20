@@ -31,7 +31,20 @@ export async function editPictureUsingPost(
     ...(options || {}),
   })
 }
-
+/** editPicture POST /api/picture/edit */
+export async function editPictureByBatchUsingPost(
+  body: API.PictureEditRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseBoolean_>('/api/picture/edit', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
 /** getPictureById GET /api/picture/get */
 export async function getPictureByIdUsingGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -113,6 +126,35 @@ export async function doPictureReviewUsingPost(
   options?: { [key: string]: any },
 ) {
   return request<API.BaseResponseBoolean_>('/api/picture/review', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
+/** searchPictureByPicture POST /api/picture/search/picture */
+export async function searchPictureByPictureUsingPost(
+  body: API.SearchPictureByPictureRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseListImageSearchResult_>('/api/picture/search/picture', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+/** searchPictureByPicture POST /api/picture/search/picture */
+export async function searchPictureByColorUsingPost(
+  body: API.SearchPictureByColorRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseListImageSearchResult_>('/api/picture/search/picture', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

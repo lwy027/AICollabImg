@@ -90,7 +90,6 @@ const getOldPicture = async () => {
     const res = await getPictureByIdUsingGet({
       id: id,
     })
-    console.log(res)
     if (res.code === 0 && res.data) {
       const data = res.data
       picture.value = data

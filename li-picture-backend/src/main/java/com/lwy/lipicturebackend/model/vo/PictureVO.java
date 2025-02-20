@@ -39,6 +39,11 @@ public class PictureVO implements Serializable {
      * 标签
      */
     private List<String> tags;
+    /**
+     * 图片主色调
+     */
+    private String picColor;
+
 
     /**
      * 分类

@@ -7,6 +7,8 @@ import downloadImage from '@/utils/downloadImage.ts'
 import { localCache } from '@/utils/catch.ts'
 import { LOGIN_TOKEN } from '@/global/constant.ts'
 import router from '@/router'
+import toHexColor from '@/utils/toHexColor'
+import ShareModal from '@/base_ui/ShareModal.vue'
 const props = defineProps<{
   id: string | number
 }>()
@@ -81,10 +83,26 @@ const doDeleteOk = async () => {
     message.error('删除失败')
   }
 }
+
+// 分享弹窗引用
+const shareModalRef = ref()
+// 分享链接
+const shareLink = ref<string>()
+
+// 分享
+const doShare = () => {
+  console.log(picture)
+  shareLink.value = `${window.location.protocol}//${window.location.host}/picture/${picture.value.id}`
+  if (shareModalRef.value) {
+    shareModalRef.value.openModal()
+  }
+}
 </script>
 
 <template>
   <div class="pictureDetail">
+    <ShareModal ref="shareModalRef" :link="shareLink" />
+
     <a-row :gutter="[16, 16]">
       <!-- 图片展示区 -->
       <a-col :sm="24" :md="16" :xl="18">
@@ -131,7 +149,21 @@ const doDeleteOk = async () => {
             <a-descriptions-item label="大小">
               {{ formatSize(picture.picSize) }}
             </a-descriptions-item>
+            <a-descriptions-item label="主色调">
+              <a-space>
+                {{ picture.picColor ?? '-' }}
+                <div
+                  v-if="picture.picColor"
+                  :style="{
+                    backgroundColor: toHexColor(picture.picColor),
+                    width: '16px',
+                    height: '16px',
+                  }"
+                />
+              </a-space>
+            </a-descriptions-item>
           </a-descriptions>
+
           <a-space wrap>
             <a-button v-if="canEdit" type="default" @click="doEdit">
               编辑
@@ -149,6 +181,12 @@ const doDeleteOk = async () => {
               免费下载
               <template #icon>
                 <DownloadOutlined />
+              </template>
+            </a-button>
+            <a-button type="primary" ghost @click="doShare">
+              分享
+              <template #icon>
+                <share-alt-outlined />
               </template>
             </a-button>
           </a-space>

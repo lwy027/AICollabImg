@@ -21,5 +21,10 @@ public class PictureUploadByBatchRequest implements Serializable {
      * 图片名称前缀
      */
     private String namePrefix;
+    /**
+     * 图片主色调
+     */
+    private String picColor;
+
     private static final long serialVersionUID = 1L;
 }

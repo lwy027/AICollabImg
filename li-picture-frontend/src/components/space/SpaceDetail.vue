@@ -1,11 +1,17 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
+import { h, onMounted, ref } from 'vue'
 import { getSpaceVoByIdUsingGet } from '@/api/spaceController.ts'
 import { message } from 'ant-design-vue'
-import { listPictureVoByPageUsingPost } from '@/api/pictureController.ts'
+import {
+  listPictureVoByPageUsingPost,
+  searchPictureByColorUsingPost,
+} from '@/api/pictureController.ts'
 import formatSize from '@/utils/formatSize.ts'
 import PictureList from '@/components/picture/PictureList.vue'
 import { useRoute } from 'vue-router'
+import PictureSearchForm from '@/base_ui/PictureSearchForm.vue'
+import BatchEditPictureModal from '@/base_ui/BatchEditPictureModal.vue'
+import { EditOutlined } from '@ant-design/icons-vue'
 interface Props {
   id: string | number
 }
@@ -18,7 +24,7 @@ const fetchSpaceDetail = async () => {
     const res = await getSpaceVoByIdUsingGet({
       id: route.params.id,
     })
-    console.log(res)
+
     if (res.code === 0 && res.data) {
       space.value = res.data
     } else {
@@ -37,23 +43,40 @@ const dataList = ref<API.PictureVO[]>([])
 const total = ref(0)
 const loading = ref(true)
 // 搜索条件
-const searchParams = reactive<API.PictureQueryRequest>({
+const searchParams = ref<API.PictureQueryRequest>({
   current: 1,
   pageSize: 12,
   sortField: 'createTime',
   sortOrder: 'descend',
 })
+
+// 分页参数
+const onPageChange = (page, pageSize) => {
+  searchParams.value.current = page
+  searchParams.value.pageSize = pageSize
+  fetchData()
+}
+
+// 搜索
+const onSearch = (newSearchParams: API.PictureQueryRequest) => {
+  searchParams.value = {
+    ...searchParams.value,
+    ...newSearchParams,
+    current: 1,
+  }
+  fetchData()
+}
+
 // 获取数据
 const fetchData = async () => {
   loading.value = true
   // 转换搜索参数
   const params = {
     spaceId: props.id,
-    ...searchParams,
+    ...searchParams.value,
   }
   const res = await listPictureVoByPageUsingPost(params)
-  console.log(res)
-  if (res.code === 0 && res.data) {
+  if (res.data) {
     dataList.value = res.data.records ?? []
     total.value = res.data.total ?? 0
   } else {
@@ -65,15 +88,43 @@ const fetchData = async () => {
 onMounted(() => {
   fetchData()
 })
-// 分页参数
-const onPageChange = (page: number, pageSize: number) => {
-  searchParams.current = page
-  searchParams.pageSize = pageSize
+const onColorChange = async (color: string) => {
+  const res = await searchPictureByColorUsingPost({
+    picColor: color,
+    spaceId: route.params.id,
+  })
+  console.log(res)
+  if (res.code === 0 && res.data) {
+    const data = res.data ?? []
+    dataList.value = data
+    total.value = data.length
+  } else {
+    message.error('获取数据失败，' + res.message)
+  }
+}
+// 分享弹窗引用
+const batchEditPictureModalRef = ref()
+
+// 批量编辑成功后，刷新数据
+const onBatchEditPictureSuccess = () => {
   fetchData()
+}
+// 打开批量编辑弹窗
+const doBatchEdit = () => {
+  if (batchEditPictureModalRef.value) {
+    batchEditPictureModalRef.value.openModal()
+  }
 }
 </script>
 <template>
   <div id="spaceDetailPage">
+    <!-- 搜索表单 -->
+    <PictureSearchForm :onSearch="onSearch" />
+    <!-- 按颜色搜索 -->
+    <a-form-item label="按颜色搜索" style="margin-top: 16px">
+      <color-picker format="hex" @pureColorChange="onColorChange" />
+    </a-form-item>
+
     <!-- 空间信息 -->
     <a-flex justify="space-between">
       <h2>{{ space.spaceName }}（私有空间）</h2>
@@ -81,6 +132,8 @@ const onPageChange = (page: number, pageSize: number) => {
         <a-button type="primary" :href="`/add_picture?spaceId=${id}`" target="_blank">
           + 创建图片
         </a-button>
+        <a-button :icon="h(EditOutlined)" @click="doBatchEdit"> 批量编辑</a-button>
+
         <a-tooltip
           :title="`占用空间 ${formatSize(space.totalSize)} / ${formatSize(space.maxSize)}`"
         >
@@ -102,6 +155,12 @@ const onPageChange = (page: number, pageSize: number) => {
       v-model:pageSize="searchParams.pageSize"
       :total="total"
       @change="onPageChange"
+    />
+    <BatchEditPictureModal
+      ref="batchEditPictureModalRef"
+      :spaceId="id as number"
+      :pictureList="dataList"
+      :onSuccess="onBatchEditPictureSuccess"
     />
   </div>
 </template>
