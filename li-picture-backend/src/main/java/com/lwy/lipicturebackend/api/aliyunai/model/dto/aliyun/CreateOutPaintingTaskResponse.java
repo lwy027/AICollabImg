@@ -1,4 +1,4 @@
-package com.lwy.lipicturebackend.api.aliyunai.model.dto;
+package com.lwy.lipicturebackend.api.aliyunai.model.dto.aliyun;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

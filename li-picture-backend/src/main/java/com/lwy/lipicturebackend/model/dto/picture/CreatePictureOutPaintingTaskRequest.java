@@ -1,4 +1,4 @@
-package com.lwy.lipicturebackend.api.aliyunai.model.dto.picture;
+package com.lwy.lipicturebackend.model.dto.picture;
 
 import com.lwy.lipicturebackend.api.aliyunai.model.dto.aliyun.CreateOutPaintingTaskRequest;
 import lombok.Data;

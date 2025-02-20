@@ -46,3 +46,6 @@ cos:
     secretKey: 1ta3JLAAFYhkttkOrMhs45sVwCF83pQt
     region: ap-nanjing
     bucket: lwy-1310725192
+# 阿里云AI配置
+aliYunAi:
+  apiKey: sk-2a84890b450a4b79b6bb91953a8b4259

@@ -1,4 +1,4 @@
-package com.lwy.lipicturebackend.api.aliyunai.model.dto;
+package com.lwy.lipicturebackend.api.aliyunai.model.dto.aliyun;
 
 import cn.hutool.core.annotation.Alias;
 import com.fasterxml.jackson.annotation.JsonProperty;

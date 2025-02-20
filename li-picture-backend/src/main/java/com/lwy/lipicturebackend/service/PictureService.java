@@ -2,6 +2,8 @@ package com.lwy.lipicturebackend.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.lwy.lipicturebackend.api.aliyunai.model.dto.aliyun.CreateOutPaintingTaskResponse;
+import com.lwy.lipicturebackend.model.dto.picture.CreatePictureOutPaintingTaskRequest;
 import com.lwy.lipicturebackend.model.dto.picture.*;
 import com.lwy.lipicturebackend.model.entity.Picture;
 import com.lwy.lipicturebackend.model.entity.User;
@@ -9,7 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.lwy.lipicturebackend.model.vo.PictureVO;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -109,4 +110,6 @@ public interface PictureService extends IService<Picture> {
 
     @Transactional(rollbackFor = Exception.class)
     void editPictureByBatch(PictureEditByBatchRequest pictureEditByBatchRequest, User loginUser);
+
+    CreateOutPaintingTaskResponse createPictureOutPaintingTask(CreatePictureOutPaintingTaskRequest createPictureOutPaintingTaskRequest, User loginUser);
 }
