@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { getPictureByIdUsingGet } from '@/api/pictureController'
 import { editPictureUsingPost, listPictureTagCategoryUsingGet } from '@/api/pictureController'
+import ImageCropper from '@/base_ui/ImageCropper.vue'
+import ImageOutPating from '@/base_ui/ImageOutPating.vue'
 import PictureUpLoad from '@/components/pictureUpLoad.vue'
 import UrlPictureUpLoad from '@/components/UrlPictureUpLoad.vue'
+import { EditOutlined, FullscreenOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, h, onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const picture = ref<API.PictureVO>()
@@ -32,6 +35,7 @@ const handleSubmit = async (values: any) => {
   if (!pictureId) {
     return
   }
+
   const res = await editPictureUsingPost({
     id: pictureId,
     spaceId: spaceId.value,
@@ -100,6 +104,33 @@ const getOldPicture = async () => {
     }
   }
 }
+// 图片编辑弹窗引用
+const imageCropperRef = ref()
+
+// 编辑图片
+const doEditPicture = () => {
+  if (imageCropperRef.value) {
+    imageCropperRef.value.openModal()
+  }
+}
+
+// ----- AI 扩图引用 -----
+const imageOutPaintingRef = ref()
+
+// 打开 AI 扩图弹窗
+const doImagePainting = async () => {
+  imageOutPaintingRef.value?.openModal()
+}
+
+// AI 扩图保存事件
+const onImageOutPaintingSuccess = (newPicture: API.PictureVO) => {
+  picture.value = newPicture
+}
+// 编辑成功事件
+const onCropSuccess = (newPicture: API.PictureVO) => {
+  picture.value = newPicture
+}
+
 onMounted(() => {
   getOldPicture()
 })
@@ -124,7 +155,29 @@ onMounted(() => {
         <UrlPictureUpLoad :picture="picture" :onSuccess="onSuccess" />
       </a-tab-pane>
     </a-tabs>
+    <!-- 图片编辑 -->
+    <div v-if="picture" class="edit-bar">
+      <a-space size="middle">
+        <a-button :icon="h(EditOutlined)" @click="doEditPicture">编辑图片</a-button>
+        <a-button type="primary" :icon="h(FullscreenOutlined)" @click="doImagePainting">
+          AI 扩图
+        </a-button>
+      </a-space>
 
+      <ImageCropper
+        ref="imageCropperRef"
+        :imageUrl="picture?.url"
+        :picture="picture"
+        :spaceId="spaceId"
+        :onSuccess="onCropSuccess"
+      />
+      <ImageOutPating
+        ref="imageOutPaintingRef"
+        :picture="picture"
+        :spaceId="spaceId"
+        :onSuccess="onImageOutPaintingSuccess"
+      />
+    </div>
     <a-form layout="vertical" v-if="picture" :model="pictureForm" @finish="handleSubmit">
       <a-form-item label="名称" name="name">
         <a-input v-model:value="pictureForm.name" placeholder="请输入名称" />
@@ -155,6 +208,7 @@ onMounted(() => {
           allowClear
         />
       </a-form-item>
+
       <a-form-item>
         <a-button type="primary" html-type="submit" style="width: 100%">创建</a-button>
       </a-form-item>
@@ -168,5 +222,9 @@ onMounted(() => {
   height: 80%;
   max-width: 720px;
   margin: 0 auto;
+  .edit-bar {
+    text-align: center;
+    margin: 16px 0;
+  }
 }
 </style>

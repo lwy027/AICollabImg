@@ -31,12 +31,13 @@ export async function editPictureUsingPost(
     ...(options || {}),
   })
 }
-/** editPicture POST /api/picture/edit */
+
+/** editPictureByBatch POST /api/picture/edit/batch */
 export async function editPictureByBatchUsingPost(
-  body: API.PictureEditRequest,
+  body: API.PictureEditByBatchRequest,
   options?: { [key: string]: any },
 ) {
-  return request<API.BaseResponseBoolean_>('/api/picture/edit', {
+  return request<API.BaseResponseBoolean_>('/api/picture/edit/batch', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -45,6 +46,7 @@ export async function editPictureByBatchUsingPost(
     ...(options || {}),
   })
 }
+
 /** getPictureById GET /api/picture/get */
 export async function getPictureByIdUsingGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -120,6 +122,42 @@ export async function listPictureVoByPageWithCacheUsingPost(
   })
 }
 
+/** createPictureOutPaintingTask POST /api/picture/out_painting/create_task */
+export async function createPictureOutPaintingTaskUsingPost(
+  body: API.CreatePictureOutPaintingTaskRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseCreateOutPaintingTaskResponse_>(
+    '/api/picture/out_painting/create_task',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: body,
+      ...(options || {}),
+    },
+  )
+}
+
+/** getPictureOutPaintingTask GET /api/picture/out_painting/get_task */
+export async function getPictureOutPaintingTaskUsingGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getPictureOutPaintingTaskUsingGETParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseGetOutPaintingTaskResponse_>(
+    '/api/picture/out_painting/get_task',
+    {
+      method: 'GET',
+      params: {
+        ...params,
+      },
+      ...(options || {}),
+    },
+  )
+}
+
 /** doPictureReview POST /api/picture/review */
 export async function doPictureReviewUsingPost(
   body: API.PictureReviewRequest,
@@ -135,12 +173,12 @@ export async function doPictureReviewUsingPost(
   })
 }
 
-/** searchPictureByPicture POST /api/picture/search/picture */
-export async function searchPictureByPictureUsingPost(
-  body: API.SearchPictureByPictureRequest,
+/** searchPictureByColor POST /api/picture/search/color */
+export async function searchPictureByColorUsingPost(
+  body: API.SearchPictureByColorRequest,
   options?: { [key: string]: any },
 ) {
-  return request<API.BaseResponseListImageSearchResult_>('/api/picture/search/picture', {
+  return request<API.BaseResponseListPictureVO_>('/api/picture/search/color', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -149,9 +187,10 @@ export async function searchPictureByPictureUsingPost(
     ...(options || {}),
   })
 }
+
 /** searchPictureByPicture POST /api/picture/search/picture */
-export async function searchPictureByColorUsingPost(
-  body: API.SearchPictureByColorRequest,
+export async function searchPictureByPictureUsingPost(
+  body: API.SearchPictureByPictureRequest,
   options?: { [key: string]: any },
 ) {
   return request<API.BaseResponseListImageSearchResult_>('/api/picture/search/picture', {

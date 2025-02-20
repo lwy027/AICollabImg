@@ -57,7 +57,6 @@ const useUser = defineStore('user', () => {
   }
   //创建用户
   async function addUser(userAddRequest: API.UserAddRequest) {
-    console.log(userAddRequest)
     const res = await addUserUsingPost(userAddRequest)
     return res
   }

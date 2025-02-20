@@ -5,6 +5,18 @@ declare namespace API {
     message?: string
   }
 
+  type BaseResponseCreateOutPaintingTaskResponse_ = {
+    code?: number
+    data?: CreateOutPaintingTaskResponse
+    message?: string
+  }
+
+  type BaseResponseGetOutPaintingTaskResponse_ = {
+    code?: number
+    data?: GetOutPaintingTaskResponse
+    message?: string
+  }
+
   type BaseResponseInt_ = {
     code?: number
     data?: number
@@ -14,6 +26,12 @@ declare namespace API {
   type BaseResponseListImageSearchResult_ = {
     code?: number
     data?: ImageSearchResult[]
+    message?: string
+  }
+
+  type BaseResponseListPictureVO_ = {
+    code?: number
+    data?: PictureVO[]
     message?: string
   }
 
@@ -113,13 +131,35 @@ declare namespace API {
     message?: string
   }
 
+  type CreateOutPaintingTaskResponse = {
+    code?: string
+    message?: string
+    output?: Output
+    requestId?: string
+  }
+
+  type CreatePictureOutPaintingTaskRequest = {
+    parameters?: Parameters
+    pictureId?: number
+  }
+
   type DeleteRequest = {
     id?: number
+  }
+
+  type GetOutPaintingTaskResponse = {
+    output?: Output1
+    requestId?: string
   }
 
   type getPictureByIdUsingGETParams = {
     /** id */
     id?: number
+  }
+
+  type getPictureOutPaintingTaskUsingGETParams = {
+    /** taskId */
+    taskId?: string
   }
 
   type getPictureVOByIdUsingGETParams = {
@@ -164,6 +204,23 @@ declare namespace API {
     userRole?: string
   }
 
+  type Output = {
+    taskId?: string
+    taskStatus?: string
+  }
+
+  type Output1 = {
+    code?: string
+    endTime?: string
+    message?: string
+    outputImageUrl?: string
+    scheduledTime?: string
+    submitTime?: string
+    taskId?: string
+    taskMetrics?: TaskMetrics
+    taskStatus?: string
+  }
+
   type PagePicture_ = {
     current?: number
     pages?: number
@@ -204,6 +261,20 @@ declare namespace API {
     total?: number
   }
 
+  type Parameters = {
+    addWatermark?: boolean
+    angle?: number
+    bestQuality?: boolean
+    bottomOffset?: number
+    leftOffset?: number
+    limitImageSize?: boolean
+    outputRatio?: string
+    rightOffset?: number
+    topOffset?: number
+    xScale?: number
+    yScale?: number
+  }
+
   type Picture = {
     category?: string
     createTime?: string
@@ -212,6 +283,7 @@ declare namespace API {
     introduction?: string
     isDelete?: number
     name?: string
+    picColor?: string
     picFormat?: string
     picHeight?: number
     picScale?: number
@@ -229,11 +301,20 @@ declare namespace API {
     userId?: number
   }
 
+  type PictureEditByBatchRequest = {
+    category?: string
+    nameRule?: string
+    pictureIdList?: number[]
+    spaceId?: number
+    tags?: string[]
+  }
+
   type PictureEditRequest = {
     category?: string
     id?: number
     introduction?: string
     name?: string
+    picColor?: string
     spaceId?: number
     tags?: string[]
   }
@@ -247,6 +328,7 @@ declare namespace API {
     name?: string
     nullSpaceId?: boolean
     pageSize?: number
+    picColor?: string
     picFormat?: string
     picHeight?: number
     picScale?: number
@@ -280,18 +362,21 @@ declare namespace API {
     id?: number
     introduction?: string
     name?: string
+    picColor?: string
     tags?: string[]
   }
 
   type PictureUploadByBatchRequest = {
     count?: number
     namePrefix?: string
+    picColor?: string
     searchText?: string
   }
 
   type PictureUploadRequest = {
     fileUrl?: string
     id?: number
+    picColor?: string
     picName?: string
     spaceId?: number
   }
@@ -303,6 +388,7 @@ declare namespace API {
     id?: number
     introduction?: string
     name?: string
+    picColor?: string
     picFormat?: string
     picHeight?: number
     picScale?: number
@@ -316,12 +402,13 @@ declare namespace API {
     userId?: number
   }
 
+  type SearchPictureByColorRequest = {
+    picColor?: string
+    spaceId?: number
+  }
+
   type SearchPictureByPictureRequest = {
     pictureId?: number
-  }
-  type SearchPictureByColorRequest = {
-    pictureId: number
-    picColor: string
   }
 
   type Space = {
@@ -390,6 +477,12 @@ declare namespace API {
     userId?: number
   }
 
+  type TaskMetrics = {
+    failed?: number
+    succeeded?: number
+    total?: number
+  }
+
   type testDownloadFileUsingGETParams = {
     /** filepath */
     filepath?: string
@@ -398,6 +491,7 @@ declare namespace API {
   type uploadPictureUsingPOSTParams = {
     fileUrl?: string
     id?: number
+    picColor?: string
     picName?: string
     spaceId?: number
   }

@@ -74,7 +74,8 @@ const doDeleteOk = async () => {
     return
   }
   const res = await deletePictureUsingPost({ id })
-
+  console.log(res)
+  console.log(id)
   if (res.code === 0) {
     visible.value = false
     message.success('删除成功')
