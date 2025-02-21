@@ -1,2 +1,13 @@
-package com.lwy.lipicturebackend.model.dto.space.analyze;public class SpaceSizeAnalyzeRequest {
+package com.lwy.lipicturebackend.model.dto.space.analyze;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+/**
+ * 空间图片大小分析请求
+ */
+@EqualsAndHashCode(callSuper = true)
+@Data
+public class SpaceSizeAnalyzeRequest extends SpaceAnalyzeRequest {
+
 }
