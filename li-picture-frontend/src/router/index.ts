@@ -83,6 +83,11 @@ const router = createRouter({
       name: '图片搜索',
       component: () => import('@/components/picture/searchPicture.vue'),
     },
+    {
+      path: '/space_analyze',
+      name: '空间分析',
+      component: () => import('@/components/space/SpaceAnalyze.vue'),
+    },
   ],
 })
 

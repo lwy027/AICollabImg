@@ -6,7 +6,7 @@ import { computed, onMounted, reactive, ref } from 'vue'
 import dayjs from 'dayjs'
 import { localCache } from '@/utils/catch'
 import { LOGIN_TOKEN, userRole } from '@/global/constant'
-import CreateUserInput from '../CreateUserInput.vue'
+import CreateUserInput from '../../base_ui/CreateUserInput.vue'
 const columns = [
   {
     title: 'id',
