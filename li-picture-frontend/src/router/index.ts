@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/components/Home.vue'
 import { userRole } from '@/global/constant'
 import addPicture from '@/views/picture/addPicture.vue'
-import addPictureBatchVue from '@/views/picture/addPictureBatch.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -37,6 +36,12 @@ const router = createRouter({
       path: '/add_picture',
       name: '创建图片',
       component: addPicture,
+    },
+    {
+      path: '/spaceUserManage/:id',
+      name: '空间成员管理',
+      component: () => import('@/components/space/SpaceUserManager.vue'),
+      props: true,
     },
 
     {

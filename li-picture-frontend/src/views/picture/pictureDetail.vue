@@ -4,8 +4,7 @@ import { message } from 'ant-design-vue'
 import { computed, onMounted, ref } from 'vue'
 import formatSize from '@/utils/formatSize.ts'
 import downloadImage from '@/utils/downloadImage.ts'
-import { localCache } from '@/utils/catch.ts'
-import { LOGIN_TOKEN } from '@/global/constant.ts'
+import { SPACE_PERMISSION_ENUM } from '@/global/constant.ts'
 import router from '@/router'
 import toHexColor from '@/utils/toHexColor'
 import ShareModal from '@/base_ui/ShareModal.vue'
@@ -15,7 +14,12 @@ const props = defineProps<{
 const visible = ref<boolean>(false)
 
 const picture = ref<API.PictureVO>({})
-
+function createPermissionChecker(permission: string) {
+  return computed(() => (picture.value.permissionList ?? []).includes(permission))
+}
+// 定义权限检查
+const canEdit = createPermissionChecker(SPACE_PERMISSION_ENUM.PICTURE_EDIT)
+const canDelete = createPermissionChecker(SPACE_PERMISSION_ENUM.PICTURE_DELETE)
 // 获取图片详情
 const fetchPictureDetail = async () => {
   try {
@@ -34,18 +38,6 @@ const fetchPictureDetail = async () => {
 
 onMounted(() => {
   fetchPictureDetail()
-})
-
-// 是否具有编辑权限
-const canEdit = computed(() => {
-  const loginUser = localCache.getCache(LOGIN_TOKEN)
-  // 未登录不可编辑
-  if (!loginUser.id) {
-    return false
-  }
-  // 仅本人或管理员可编辑
-  const user = picture.value.user || {}
-  return loginUser.id === user.id || loginUser.userRole === 'admin'
 })
 
 // 编辑
@@ -172,7 +164,7 @@ const doShare = () => {
                 <EditOutlined />
               </template>
             </a-button>
-            <a-button v-if="canEdit" danger @click="doDelete">
+            <a-button v-if="canDelete" danger @click="doDelete">
               删除
               <template #icon>
                 <DeleteOutlined />
