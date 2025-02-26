@@ -1,4 +1,4 @@
-package com.lwy.lipicturebackend.manager.websocket.model;
+package com.lwy.lipicturebackend.manager.websocket;
 
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;

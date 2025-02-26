@@ -219,6 +219,7 @@ public class pictureServiceImpl extends ServiceImpl<pictureMapper, Picture> impl
         PictureVO pictureVO = PictureVO.objToVo(picture);
         // 关联查询用户信息
         Long userId = picture.getUserId();
+
         if (userId != null && userId > 0) {
             User user = userService.getById(userId);
             UserVo userVO = userService.getUserVo(user);

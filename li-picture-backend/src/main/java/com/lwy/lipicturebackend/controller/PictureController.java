@@ -2,6 +2,7 @@ package com.lwy.lipicturebackend.controller;
 
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONTokener;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.benmanes.caffeine.cache.Cache;
@@ -158,22 +159,27 @@ public class PictureController {
         ThrowUtils.throwIf(id <= 0, ErrorCode.PARAMS_ERROR);
         // 查询数据库
         Picture picture = pictureService.getById(id);
+        System.out.println("picture" + picture);
         ThrowUtils.throwIf(picture == null, ErrorCode.NOT_FOUND_ERROR);
-        // 空间的图片，需要校验权限
-        Space space = null;
+
+        // 打印 spaceId，确保它不是 null
         Long spaceId = picture.getSpaceId();
+        System.out.println("spaceId: " + spaceId);
+        Space space = null;
         if (spaceId != null) {
             boolean hasPermission = StpKit.SPACE.hasPermission(SpaceUserPermissionConstant.PICTURE_VIEW);
             ThrowUtils.throwIf(!hasPermission, ErrorCode.NO_AUTH_ERROR);
             space = spaceService.getById(spaceId);
             ThrowUtils.throwIf(space == null, ErrorCode.NOT_FOUND_ERROR, "空间不存在");
         }
+
         // 获取权限列表
         User loginUser = userService.getLoginUser(request);
         List<String> permissionList = spaceUserAuthManager.getPermissionList(space, loginUser);
+
         PictureVO pictureVO = pictureService.getPictureVO(picture, request);
         pictureVO.setPermissionList(permissionList);
-        // 获取封装类
+
         return ResultUtils.success(pictureVO);
     }
 
