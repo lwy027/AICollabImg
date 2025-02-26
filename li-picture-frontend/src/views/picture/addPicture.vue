@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { getPictureByIdUsingGet } from '@/api/pictureController'
 import { editPictureUsingPost, listPictureTagCategoryUsingGet } from '@/api/pictureController'
+import { getSpaceVoByIdUsingGet } from '@/api/spaceController'
 import ImageCropper from '@/base_ui/ImageCropper.vue'
 import ImageOutPating from '@/base_ui/ImageOutPating.vue'
 import PictureUpLoad from '@/components/picture/pictureUpLoad.vue'
 import UrlPictureUpLoad from '@/components/space/UrlPictureUpLoad.vue'
 import { EditOutlined, FullscreenOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
-import { computed, h, onMounted, reactive, ref } from 'vue'
+import { computed, h, onMounted, reactive, ref, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const picture = ref<API.PictureVO>()
@@ -83,13 +84,12 @@ const getTagCategoryOptions = async () => {
 onMounted(() => {
   getTagCategoryOptions()
 })
+// 获取数据
 
 // 修改图片
 // 获取老数据
 const getOldPicture = async () => {
-  // 获取数据
   const id = route.query?.id
-
   if (id) {
     const res = await getPictureByIdUsingGet({
       id: id,
@@ -107,13 +107,6 @@ const getOldPicture = async () => {
 // 图片编辑弹窗引用
 const imageCropperRef = ref()
 
-// 编辑图片
-const doEditPicture = () => {
-  if (imageCropperRef.value) {
-    imageCropperRef.value.openModal()
-  }
-}
-
 // ----- AI 扩图引用 -----
 const imageOutPaintingRef = ref()
 
@@ -126,13 +119,36 @@ const doImagePainting = async () => {
 const onImageOutPaintingSuccess = (newPicture: API.PictureVO) => {
   picture.value = newPicture
 }
-// 编辑成功事件
-const onCropSuccess = (newPicture: API.PictureVO) => {
-  picture.value = newPicture
+
+const space = ref<number>()
+
+// 获取空间信息
+const fetchSpace = async () => {
+  // 获取数据
+  if (spaceId.value) {
+    const res = await getSpaceVoByIdUsingGet({
+      id: spaceId.value,
+    })
+    if (res.code === 0 && res.data) {
+      space.value = res.data
+    }
+  }
 }
+// 编辑图片
+const doEditPicture = () => {
+  if (imageCropperRef.value) {
+    imageCropperRef.value.openModal()
+    fetchSpace()
+  }
+}
+
+watchEffect(() => {
+  fetchSpace()
+})
 
 onMounted(() => {
   getOldPicture()
+  fetchSpace()
 })
 </script>
 
@@ -169,8 +185,10 @@ onMounted(() => {
         :imageUrl="picture?.url"
         :picture="picture"
         :spaceId="spaceId"
-        :onSuccess="onCropSuccess"
+        :space="space"
+        :onSuccess="onSuccess"
       />
+
       <ImageOutPating
         ref="imageOutPaintingRef"
         :picture="picture"

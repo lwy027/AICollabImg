@@ -8,7 +8,7 @@ import {
   listSpaceUserUsingPost,
 } from '@/api/spaceUserController.ts'
 import dayjs from 'dayjs'
-import type { SPACE_ROLE_OPTIONS } from '@/global/constant'
+import { SPACE_ROLE_OPTIONS } from '@/global/constant'
 
 interface Props {
   id: string

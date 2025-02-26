@@ -12,6 +12,7 @@ import GlobalSider from '@/components/main/GlobalSider.vue'
         <Header />
       </a-layout-header>
       <GlobalSider class="sider" />
+
       <a-layout-content class="content">
         <RouterView />
       </a-layout-content>

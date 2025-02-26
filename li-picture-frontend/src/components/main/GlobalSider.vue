@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { listMyTeamSpaceUsingPost } from '@/api/spaceUserController'
 import { SPACE_TYPE_ENUM } from '@/global/constant'
-import { LOGIN_TOKEN, SPACE_LEVEL_ENUM } from '@/global/constant'
+import { LOGIN_TOKEN } from '@/global/constant'
 import { localCache } from '@/utils/catch'
 import { PictureOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
@@ -79,7 +79,7 @@ const fetchTeamSpaceList = async () => {
  */
 watchEffect(() => {
   // 登录才加载
-  if (localCache.getCache(LOGIN_TOKEN).id) {
+  if (localCache.getCache(LOGIN_TOKEN)?.id) {
     fetchTeamSpaceList()
   }
 })

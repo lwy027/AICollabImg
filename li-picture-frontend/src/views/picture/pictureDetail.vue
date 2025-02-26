@@ -26,6 +26,8 @@ const fetchPictureDetail = async () => {
     const res = await getPictureVoByIdUsingGet({
       id: props.id,
     })
+    console.log(props.id)
+    console.log(res)
     if (res.code === 0 && res.data) {
       picture.value = res.data
     } else {
@@ -66,8 +68,7 @@ const doDeleteOk = async () => {
     return
   }
   const res = await deletePictureUsingPost({ id })
-  console.log(res)
-  console.log(id)
+
   if (res.code === 0) {
     visible.value = false
     message.success('删除成功')
@@ -84,7 +85,6 @@ const shareLink = ref<string>()
 
 // 分享
 const doShare = () => {
-  console.log(picture)
   shareLink.value = `${window.location.protocol}//${window.location.host}/picture/${picture.value.id}`
   if (shareModalRef.value) {
     shareModalRef.value.openModal()

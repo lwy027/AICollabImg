@@ -22,6 +22,7 @@ const route = useRoute()
 // 通用权限检查函数
 function createPermissionChecker(permission: string) {
   return computed(() => {
+    console.log(space.value)
     return (space.value.permissionList ?? []).includes(permission)
   })
 }

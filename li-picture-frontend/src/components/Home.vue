@@ -6,7 +6,6 @@ import {
 } from '@/api/pictureController'
 import { message } from 'ant-design-vue'
 import { computed, onMounted, reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
 import PictureList from './picture/PictureList.vue'
 
 // 数据
@@ -95,9 +94,9 @@ onMounted(() => {
 
 const onPageChange = (value) => {
   console.log(value)
-  // searchParams.current = page
-  // searchParams.pageSize = pageSize
-  // fetchData()
+  searchParams.current = page
+  searchParams.pageSize = pageSize
+  fetchData()
 }
 </script>
 

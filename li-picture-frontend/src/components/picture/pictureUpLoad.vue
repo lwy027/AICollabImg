@@ -4,7 +4,6 @@ import { PlusOutlined, LoadingOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
 import type { UploadProps } from 'ant-design-vue'
 import { uploadPictureUsingPost } from '@/api/pictureController'
-import type ImageCropper from '@/base_ui/ImageCropper.vue'
 
 interface Props {
   picture?: API.PictureVO
@@ -29,7 +28,6 @@ const beforeUpload = (file: UploadProps['fileList'][number]) => {
 }
 
 //上传图片到后端函数
-
 /**
  * 上传
  * @param file
