@@ -9,6 +9,7 @@ import com.lwy.lipicturebackend.constant.UserConstant;
 import com.lwy.lipicturebackend.exception.BusinessException;
 import com.lwy.lipicturebackend.exception.ErrorCode;
 import com.lwy.lipicturebackend.exception.ThrowUtils;
+import com.lwy.lipicturebackend.manager.auth.SpaceUserAuthManager;
 import com.lwy.lipicturebackend.model.dto.space.*;
 import com.lwy.lipicturebackend.model.entity.Space;
 import com.lwy.lipicturebackend.model.entity.User;
@@ -35,6 +36,8 @@ public class SpaceController {
     private UserService userService;
     @Resource
     private SpaceService spaceService;
+    @Resource
+    private SpaceUserAuthManager spaceUserAuthManager;
 
     @PostMapping("/add")
     public BaseResponse<Long> addSpace(@RequestBody SpaceAddRequest spaceAddRequest, HttpServletRequest request) {
@@ -115,8 +118,12 @@ public class SpaceController {
         // 查询数据库
         Space space = spaceService.getById(id);
         ThrowUtils.throwIf(space == null, ErrorCode.NOT_FOUND_ERROR);
+        SpaceVO spaceVO = spaceService.getSpaceVO(space, request);
+        User loginUser = userService.getLoginUser(request);
+        List<String> permissionList = spaceUserAuthManager.getPermissionList(space, loginUser);
+        spaceVO.setPermissionList(permissionList);
         // 获取封装类
-        return ResultUtils.success(spaceService.getSpaceVO(space, request));
+        return ResultUtils.success(spaceVO);
     }
 
     /**
