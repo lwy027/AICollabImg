@@ -1,27 +1,34 @@
 <script setup lang="ts">
-import { getPictureByIdUsingGet } from '@/api/pictureController'
-import { editPictureUsingPost, listPictureTagCategoryUsingGet } from '@/api/pictureController'
-import { getSpaceVoByIdUsingGet } from '@/api/spaceController'
-import ImageCropper from '@/base_ui/ImageCropper.vue'
-import ImageOutPating from '@/base_ui/ImageOutPating.vue'
-import PictureUpLoad from '@/components/picture/pictureUpLoad.vue'
-import UrlPictureUpLoad from '@/components/space/UrlPictureUpLoad.vue'
-import { EditOutlined, FullscreenOutlined } from '@ant-design/icons-vue'
-import { message } from 'ant-design-vue'
+import PictureUpload from '@/components/picture/pictureUpLoad.vue'
 import { computed, h, onMounted, reactive, ref, watchEffect } from 'vue'
+import { message } from 'ant-design-vue'
+import {
+  editPictureUsingPost,
+  getPictureVoByIdUsingGet,
+  listPictureTagCategoryUsingGet,
+} from '@/api/pictureController.ts'
 import { useRoute, useRouter } from 'vue-router'
-
-const picture = ref<API.PictureVO>()
-
-const pictureForm = reactive<API.PictureEditRequest>({})
+import UrlPictureUpload from '@/components/space/UrlPictureUpLoad.vue'
+import ImageCropper from '@/base_ui/ImageCropper.vue'
+import { EditOutlined, FullscreenOutlined } from '@ant-design/icons-vue'
+import ImageOutPainting from '@/base_ui/ImageOutPating.vue'
+import { getSpaceVoByIdUsingGet } from '@/api/spaceController.ts'
 
 const router = useRouter()
 const route = useRoute()
+
+const picture = ref<API.PictureVO>()
+const pictureForm = reactive<API.PictureEditRequest>({})
+const uploadType = ref<'file' | 'url'>('file')
 // 空间 id
 const spaceId = computed(() => {
   return route.query?.spaceId
 })
 
+/**
+ * 图片上传成功
+ * @param newPicture
+ */
 const onSuccess = (newPicture: API.PictureVO) => {
   picture.value = newPicture
   pictureForm.name = newPicture.name
@@ -32,16 +39,17 @@ const onSuccess = (newPicture: API.PictureVO) => {
  * @param values
  */
 const handleSubmit = async (values: any) => {
-  const pictureId = picture.value?.id
+  console.log(values)
+  const pictureId = picture.value.id
   if (!pictureId) {
     return
   }
-
   const res = await editPictureUsingPost({
     id: pictureId,
     spaceId: spaceId.value,
     ...values,
   })
+  // 操作成功
   if (res.code === 0 && res.data) {
     message.success('创建成功')
     // 跳转到图片详情页
@@ -53,17 +61,16 @@ const handleSubmit = async (values: any) => {
   }
 }
 
-//获取分类和标签选项
-const tagOptions = ref<{ value: string; label: string }[]>([])
-const categoryOptions = ref<{ value: string; label: string }[]>([])
-const uploadType = ref<'file' | 'url'>('file')
+const categoryOptions = ref<string[]>([])
+const tagOptions = ref<string[]>([])
 
-// 获取标签和分类选项
+/**
+ * 获取标签和分类选项
+ * @param values
+ */
 const getTagCategoryOptions = async () => {
   const res = await listPictureTagCategoryUsingGet()
-
   if (res.code === 0 && res.data) {
-    // 转换成下拉选项组件接受的格式
     tagOptions.value = (res.data.tagList ?? []).map((data: string) => {
       return {
         value: data,
@@ -77,22 +84,21 @@ const getTagCategoryOptions = async () => {
       }
     })
   } else {
-    message.error('加载选项失败，' + res.data.message)
+    message.error('获取标签分类列表失败，' + res.message)
   }
 }
 
 onMounted(() => {
   getTagCategoryOptions()
 })
-// 获取数据
 
-// 修改图片
 // 获取老数据
 const getOldPicture = async () => {
+  // 获取到 id
   const id = route.query?.id
   if (id) {
-    const res = await getPictureByIdUsingGet({
-      id: id,
+    const res = await getPictureVoByIdUsingGet({
+      id,
     })
     if (res.code === 0 && res.data) {
       const data = res.data
@@ -104,8 +110,23 @@ const getOldPicture = async () => {
     }
   }
 }
-// 图片编辑弹窗引用
+
+onMounted(() => {
+  getOldPicture()
+})
+
+// ----- 图片编辑器引用 ------
 const imageCropperRef = ref()
+
+// 编辑图片
+const doEditPicture = async () => {
+  imageCropperRef.value?.openModal()
+}
+
+// 编辑成功事件
+const onCropSuccess = (newPicture: API.PictureVO) => {
+  picture.value = newPicture
+}
 
 // ----- AI 扩图引用 -----
 const imageOutPaintingRef = ref()
@@ -120,7 +141,8 @@ const onImageOutPaintingSuccess = (newPicture: API.PictureVO) => {
   picture.value = newPicture
 }
 
-const space = ref<number>()
+// 获取空间信息
+const space = ref<API.SpaceVO>()
 
 // 获取空间信息
 const fetchSpace = async () => {
@@ -134,41 +156,28 @@ const fetchSpace = async () => {
     }
   }
 }
-// 编辑图片
-const doEditPicture = () => {
-  if (imageCropperRef.value) {
-    imageCropperRef.value.openModal()
-    fetchSpace()
-  }
-}
 
 watchEffect(() => {
   fetchSpace()
 })
-
-onMounted(() => {
-  getOldPicture()
-  fetchSpace()
-})
 </script>
-
 <template>
-  <div class="addPicture">
+  <div id="addPicturePage">
     <h2 style="margin-bottom: 16px">
       {{ route.query?.id ? '修改图片' : '创建图片' }}
     </h2>
     <a-typography-paragraph v-if="spaceId" type="secondary">
       保存至空间：<a :href="`/space/${spaceId}`" target="_blank">{{ spaceId }}</a>
     </a-typography-paragraph>
-
     <!-- 选择上传方式 -->
-    <a-tabs v-model:activeKey="uploadType"
-      >>
+    <a-tabs v-model:activeKey="uploadType">
       <a-tab-pane key="file" tab="文件上传">
-        <PictureUpLoad :picture="picture" :onSuccess="onSuccess" />
+        <!-- 图片上传组件 -->
+        <PictureUpload :picture="picture" :spaceId="spaceId" :onSuccess="onSuccess" />
       </a-tab-pane>
       <a-tab-pane key="url" tab="URL 上传" force-render>
-        <UrlPictureUpLoad :picture="picture" :onSuccess="onSuccess" />
+        <!-- URL 图片上传组件 -->
+        <UrlPictureUpload :picture="picture" :spaceId="spaceId" :onSuccess="onSuccess" />
       </a-tab-pane>
     </a-tabs>
     <!-- 图片编辑 -->
@@ -179,70 +188,71 @@ onMounted(() => {
           AI 扩图
         </a-button>
       </a-space>
-
       <ImageCropper
         ref="imageCropperRef"
         :imageUrl="picture?.url"
         :picture="picture"
         :spaceId="spaceId"
         :space="space"
-        :onSuccess="onSuccess"
+        :onSuccess="onCropSuccess"
       />
-
-      <ImageOutPating
+      <ImageOutPainting
         ref="imageOutPaintingRef"
         :picture="picture"
         :spaceId="spaceId"
         :onSuccess="onImageOutPaintingSuccess"
       />
     </div>
-    <a-form layout="vertical" v-if="picture" :model="pictureForm" @finish="handleSubmit">
-      <a-form-item label="名称" name="name">
-        <a-input v-model:value="pictureForm.name" placeholder="请输入名称" />
+    <!-- 图片信息表单 -->
+    <a-form
+      v-if="picture"
+      name="pictureForm"
+      layout="vertical"
+      :model="pictureForm"
+      @finish="handleSubmit"
+    >
+      <a-form-item name="name" label="名称">
+        <a-input v-model:value="pictureForm.name" placeholder="请输入名称" allow-clear />
       </a-form-item>
-      <a-form-item label="简介" name="introduction">
+      <a-form-item name="introduction" label="简介">
         <a-textarea
           v-model:value="pictureForm.introduction"
           placeholder="请输入简介"
-          :rows="2"
-          autoSize
-          allowClear
+          :auto-size="{ minRows: 2, maxRows: 5 }"
+          allow-clear
         />
       </a-form-item>
-      <a-form-item label="分类" name="category">
+      <a-form-item name="category" label="分类">
         <a-auto-complete
           v-model:value="pictureForm.category"
           placeholder="请输入分类"
-          allowClear
           :options="categoryOptions"
+          allow-clear
         />
       </a-form-item>
-      <a-form-item label="标签" name="tags">
+      <a-form-item name="tags" label="标签">
         <a-select
           v-model:value="pictureForm.tags"
           mode="tags"
           placeholder="请输入标签"
           :options="tagOptions"
-          allowClear
+          allow-clear
         />
       </a-form-item>
-
       <a-form-item>
         <a-button type="primary" html-type="submit" style="width: 100%">创建</a-button>
       </a-form-item>
     </a-form>
   </div>
 </template>
-
-<style lang="less" scoped>
-.addPicture {
-  width: 80%;
-  height: 80%;
+<style scoped>
+#addPicturePage {
   max-width: 720px;
   margin: 0 auto;
-  .edit-bar {
-    text-align: center;
-    margin: 16px 0;
-  }
+}
+
+#addPicturePage .edit-bar {
+  text-align: center;
+  margin: 16px 0;
 }
 </style>
