@@ -13,12 +13,17 @@ import PictureSearchForm from '@/base_ui/PictureSearchForm.vue'
 import BatchEditPictureModal from '@/base_ui/BatchEditPictureModal.vue'
 import { BarChartOutlined, EditOutlined, TeamOutlined } from '@ant-design/icons-vue'
 import { SPACE_PERMISSION_ENUM, SPACE_TYPE_MAP } from '@/global/constant'
-interface Props {
-  id: string | number
-}
+
 const props = defineProps<Props>()
 const space = ref<API.SpaceVO>({})
 const route = useRoute()
+interface Props {
+  id: {
+    type:string | number
+    default:route.params.id
+  }
+}
+
 // 通用权限检查函数
 function createPermissionChecker(permission: string) {
   return computed(() => {
@@ -26,7 +31,7 @@ function createPermissionChecker(permission: string) {
     return (space.value.permissionList ?? []).includes(permission)
   })
 }
-
+const id =route.params.id
 // 定义权限检查
 const canManageSpaceUser = createPermissionChecker(SPACE_PERMISSION_ENUM.SPACE_USER_MANAGE)
 const canUploadPicture = createPermissionChecker(SPACE_PERMISSION_ENUM.PICTURE_UPLOAD)
@@ -36,7 +41,7 @@ const canDeletePicture = createPermissionChecker(SPACE_PERMISSION_ENUM.PICTURE_D
 const fetchSpaceDetail = async () => {
   try {
     const res = await getSpaceVoByIdUsingGet({
-      id: route.params.id,
+      id,
     })
 
     if (res.code === 0 && res.data) {
@@ -84,9 +89,10 @@ const onSearch = (newSearchParams: API.PictureQueryRequest) => {
 // 获取数据
 const fetchData = async () => {
   loading.value = true
+  console.log(props.id)
   // 转换搜索参数
   const params = {
-    spaceId: props.id,
+    spaceId: id,
     ...searchParams.value,
   }
   const res = await listPictureVoByPageUsingPost(params)
@@ -105,7 +111,7 @@ onMounted(() => {
 const onColorChange = async (color: string) => {
   const res = await searchPictureByColorUsingPost({
     picColor: color,
-    spaceId: route.params.id,
+    spaceId: id,
   })
   console.log(res)
   if (res.code === 0 && res.data) {
@@ -130,7 +136,7 @@ const doBatchEdit = () => {
   }
 }
 watch(
-  () => props.id,
+  () => id,
   (newSpaceId) => {
     fetchSpaceDetail()
     fetchData()

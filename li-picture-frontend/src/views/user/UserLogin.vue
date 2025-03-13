@@ -36,8 +36,8 @@ const handleSubmit = async (values: any) => {
 
 <template>
   <div id="userLoginPage">
-    <h2 class="title">AI云图库 - 用户登录</h2>
-    <div class="desc">企业级智能协同云图库</div>
+    <h2 class="title">AI智能云图库 - 用户登录</h2>
+    <div class="desc">基于AI与多模态协同的智能图片管理平台</div>
     <a-form :model="formState" name="basic" autocomplete="off" @finish="handleSubmit">
       <a-form-item name="userAccount" :rules="[{ required: true, message: '请输入账号' }]">
         <a-input v-model:value="formState.userAccount" placeholder="请输入账号" />

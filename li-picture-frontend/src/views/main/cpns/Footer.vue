@@ -3,7 +3,7 @@
 
 <template>
   <div class="footer">
-    <a href="#">AI云图库 by 多喝热水 </a>
+    <a href="#">AI智能图库管理平台 by 多喝热水 </a>
   </div>
 </template>
 

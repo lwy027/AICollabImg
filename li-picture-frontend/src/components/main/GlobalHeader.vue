@@ -92,11 +92,11 @@ const doLogout = () => {
         <RouterLink to="/">
           <div class="title-bar">
             <img class="logo" src="@/assets/img/logo.jpg" alt="logo" />
-            <div class="title">智能云图库</div>
+            <div class="title">AI智能图库管理平台</div>
           </div>
         </RouterLink>
       </a-col>
-      <a-col flex="auto">
+      <a-col flex="auto" class='center' >
         <a-menu
           v-model:selectedKeys="current"
           mode="horizontal"
@@ -128,6 +128,7 @@ const doLogout = () => {
 <style lang="less" scoped>
 .globalHeader {
   .title-bar {
+    width:300px;
     display: flex;
     align-items: center;
 
@@ -146,7 +147,9 @@ const doLogout = () => {
     position: absolute;
     top: 50%;
   }
-
+.center {
+  margin-left:100px;
+}
   .user-login-status:hover .user-login-avatar {
     display: block;
   }
